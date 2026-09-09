@@ -1,12 +1,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="把网页、本机应用和笔记摆在一张自由画布上，像整理桌面一样归类。Obsidian 插件，每个收藏都是一个纯 Markdown 文件。">
-<meta property="og:title" content="网页桌面 · 把收藏摆成一张桌面">
+<meta property="og:title" content="NaviBoard · 把收藏摆成一张桌面">
 <meta property="og:description" content="网页、本机应用和笔记摆在一张自由画布上。Obsidian 插件，每个收藏都是一个纯 Markdown 文件。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://obsidian-web-desk.vercel.app">
 <meta name="twitter:card" content="summary_large_image">
-<title>网页桌面</title>
+<title>NaviBoard</title>
 <link rel="icon" type="image/svg+xml" href="./logo.svg">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@1&display=swap">
 <style>
@@ -204,8 +204,8 @@ footer a{color:var(--ink-2);border-bottom:1px solid var(--line)}
 
 <div class="nav">
   <div class="pill">
-    <a class="logo" href="#top" aria-label="网页桌面"><img src="./logo.svg" alt="" aria-hidden="true"></a>
-    <nav><a href="#demo">试一试</a><a href="#feat">为什么</a><a href="#install">安装</a><a href="https://github.com/IvyYang1999/obsidian-web-desk" target="_blank" rel="noopener">GitHub</a></nav>
+    <a class="logo" href="#top" aria-label="NaviBoard"><img src="./logo.svg" alt="" aria-hidden="true"></a>
+    <nav><a href="#demo">试一试</a><a href="#feat">为什么</a><a href="#install">安装</a><a href="https://github.com/IvyYang1999/obsidian-naviboard" target="_blank" rel="noopener">GitHub</a></nav>
     <button class="theme" id="theme" aria-label="切换明暗">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
     </button>
@@ -237,8 +237,8 @@ footer a{color:var(--ink-2);border-bottom:1px solid var(--line)}
     </div>
   </div>
   <p class="scene-note" id="sceneNote"></p>
-  <div class="demo" id="canvas" tabindex="0" aria-label="可交互的网页桌面演示">
-    <div class="win"><i></i><i></i><i></i><span>网页桌面 · 演示</span></div>
+  <div class="demo" id="canvas" tabindex="0" aria-label="可交互的 NaviBoard 演示">
+    <div class="win"><i></i><i></i><i></i><span>NaviBoard · 演示</span></div>
     <div class="layer" id="layer"></div>
     <div class="guide v" id="gv"></div><div class="guide h" id="gh"></div>
     <div class="rail" aria-label="新建">
@@ -291,17 +291,17 @@ footer a{color:var(--ink-2);border-bottom:1px solid var(--line)}
     <div>
       <h3>安装</h3>
       <p>Obsidian 桌面端（macOS / Windows）。用 <a href="https://github.com/TfTHacker/obsidian42-brat" target="_blank" rel="noopener" style="border-bottom:1px solid var(--line)">BRAT</a> 装，不用碰任何文件夹，之后还会自动更新。</p>
-      <div class="cta" style="justify-content:flex-start;margin-top:18px"><a class="btn primary" href="https://github.com/IvyYang1999/obsidian-web-desk" target="_blank" rel="noopener">在 GitHub 上查看</a></div>
+      <div class="cta" style="justify-content:flex-start;margin-top:18px"><a class="btn primary" href="https://github.com/IvyYang1999/obsidian-naviboard" target="_blank" rel="noopener">在 GitHub 上查看</a></div>
     </div>
     <ol class="steps">
       <li><b>1</b><span>在社区插件里搜 <code>BRAT</code> 安装并启用</span></li>
-      <li><b>2</b><span>命令面板运行 <code>BRAT: Add a beta plugin</code>，粘贴 <code>IvyYang1999/obsidian-web-desk</code></span></li>
-      <li><b>3</b><span>在第三方插件里打开「网页桌面」，左侧 ribbon 出现网格图标</span></li>
+      <li><b>2</b><span>命令面板运行 <code>BRAT: Add a beta plugin</code>，粘贴 <code>IvyYang1999/obsidian-naviboard</code></span></li>
+      <li><b>3</b><span>在第三方插件里打开「NaviBoard」，左侧 ribbon 出现网格图标</span></li>
     </ol>
   </div>
 </section>
 </main>
-<footer class="wrap">网页桌面 · web-desk · <a href="https://github.com/IvyYang1999/obsidian-web-desk" target="_blank" rel="noopener">源码与问题反馈</a></footer>
+<footer class="wrap">NaviBoard · <a href="https://github.com/IvyYang1999/obsidian-naviboard" target="_blank" rel="noopener">源码与问题反馈</a></footer>
 
 <script>
 (() => {
@@ -344,7 +344,7 @@ footer a{color:var(--ink-2);border-bottom:1px solid var(--line)}
         { id: "c1", kind: "card", title: "Attention Is All You Need", x: 200, y: 90, host: "arxiv.org", desc: "The dominant sequence transduction models are based on complex recurrent or convolutional neural networks…", url: "https://arxiv.org/abs/1706.03762", letter: "A" },
         { id: "i2", kind: "web", title: "我们如何把知识库从笔记堆变成第二大脑", x: 520, y: 90, url: "https://mp.weixin.qq.com/", letter: "微", color: "#3fb37f" },
         { id: "n1", kind: "note", title: "读书笔记", x: 650, y: 90 },
-        { id: "i3", kind: "web", title: "obsidian-web-desk", x: 520, y: 220, url: "https://github.com/IvyYang1999/obsidian-web-desk", svg: "gh" },
+        { id: "i3", kind: "web", title: "obsidian-naviboard", x: 520, y: 220, url: "https://github.com/IvyYang1999/obsidian-naviboard", svg: "gh" },
         { id: "p1", kind: "app", title: "Figma", x: 64, y: 460, svg: "figma" },
         { id: "p2", kind: "app", title: "Raycast", x: 200, y: 460, svg: "raycast" },
         { id: "p3", kind: "app", title: "Excalidraw", x: 336, y: 460, svg: "excalidraw" },
