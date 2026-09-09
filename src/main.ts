@@ -46,7 +46,7 @@ export default class WebDeskPlugin extends Plugin {
 
     // 画布上悬停即弹出页面预览会遮住一大片画布；默认要求按住 Cmd/Ctrl，用户可在“页面预览”设置里改。
     this.registerHoverLinkSource("web-desk", {
-      display: "网页桌面",
+      display: "NaviBoard",
       defaultMod: true,
     });
     this.favicons = new FaviconResolver(this.app, () => this.settings.imageFolder);
@@ -93,19 +93,19 @@ export default class WebDeskPlugin extends Plugin {
     };
     this.registerView(VIEW_TYPE_WEB_DESK, (leaf) => new WebDeskView(leaf, host));
 
-    this.addRibbonIcon("layout-grid", "打开网页桌面", () => {
+    this.addRibbonIcon("layout-grid", "打开 NaviBoard", () => {
       void this.activateView();
     });
 
     this.addCommand({
       id: "open-web-desk",
-      name: "打开网页桌面",
+      name: "打开画布",
       callback: () => void this.activateView(),
     });
 
     this.addCommand({
       id: "bookmark-url",
-      name: "收藏 URL 到网页桌面",
+      name: "收藏 URL 到画布",
       callback: () => {
         void this.activateView().then(() => {
           const view = this.getActiveView();
@@ -113,10 +113,10 @@ export default class WebDeskPlugin extends Plugin {
             view.promptForUrlAtCenter();
           } else {
             new TextInputModal(this.app, {
-              title: "收藏 URL 到网页桌面",
+              title: "收藏 URL 到 NaviBoard",
               placeholder: "https://example.com/article",
               submitLabel: "收藏",
-              onSubmit: () => new Notice("请先打开网页桌面画布再收藏"),
+              onSubmit: () => new Notice("请先打开 NaviBoard 画布再收藏"),
             }).open();
           }
         });

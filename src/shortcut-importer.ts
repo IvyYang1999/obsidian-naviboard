@@ -66,7 +66,7 @@ export async function createLocalShortcutNote(
     "",
     `本机${shortcutKindLabel(shortcut.kind)}快捷方式：\`${shortcut.path}\``,
     "",
-    "在网页桌面上双击图标即可启动；换一台机器时若路径不同，会按名称启动。",
+    "在 NaviBoard 画布上双击图标即可启动；换一台机器时若路径不同，会按名称启动。",
     "",
   ].join("\n");
   return { file: await app.vault.create(path, content), shortcut, created: true };

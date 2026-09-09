@@ -243,7 +243,7 @@ export class WebDeskView extends ItemView {
   }
 
   getDisplayText(): string {
-    return "网页桌面";
+    return "NaviBoard";
   }
 
   getIcon(): string {
@@ -1258,7 +1258,7 @@ export class WebDeskView extends ItemView {
       hostEl: this.rootEl,
       settings: this.settings,
       onSettingsChange: () => this.host.setBlockedEmbedHosts(this.settings.blockedEmbedHosts),
-      originLabel: "网页桌面",
+      originLabel: "NaviBoard",
       resolveFavicon: this.host.resolveFavicon,
       resolveShortcutIcon: this.host.resolveShortcutIcon,
     });
@@ -3738,7 +3738,7 @@ export class WebDeskView extends ItemView {
 
   private promptForUrl(point: Point): void {
     new TextInputModal(this.app, {
-      title: "收藏 URL 到网页桌面",
+      title: "收藏 URL 到 NaviBoard",
       placeholder: "https://example.com/article",
       submitLabel: "收藏",
       onSubmit: (value) => {
