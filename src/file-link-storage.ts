@@ -1,6 +1,6 @@
 import { App, normalizePath, TFile } from "obsidian";
 import { extractMarkdownLinkCandidates, vaultPathFromMarkdownCandidate } from "./file-link-state";
-import { quoteYaml, safeName } from "./util";
+import { asRecord, quoteYaml, safeName } from "./util";
 import type { WebDeskSettings } from "./types";
 
 export interface ShortcutResult {
@@ -50,7 +50,7 @@ export async function createMarkdownShortcut(
   await ensureFolder(app, folder);
   const existing = app.vault.getMarkdownFiles().find((file) => {
     if (!file.path.startsWith(`${folder}/`)) return false;
-    const fm = app.metadataCache.getFileCache(file)?.frontmatter as Record<string, unknown> | undefined;
+    const fm = asRecord(app.metadataCache.getFileCache(file)?.frontmatter);
     return fm?.desk_file === target.path;
   });
   if (existing) return { file: existing, created: false };

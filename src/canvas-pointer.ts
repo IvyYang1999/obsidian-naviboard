@@ -39,7 +39,9 @@ export function beginCanvasPointerSession(options: CanvasPointerSessionOptions):
   let moved = false;
   let finished = false;
   if (options.resizing) element.addClass("is-resizing");
-  try { element.setPointerCapture(event.pointerId); } catch {}
+  try { element.setPointerCapture(event.pointerId); } catch {
+    // The element can be detached while Obsidian rebuilds an embedded block.
+  }
 
   const onMove = (moveEvent: PointerEvent): void => {
     if (moveEvent.pointerId !== event.pointerId) return;
@@ -80,7 +82,9 @@ export function beginCanvasPointerSession(options: CanvasPointerSessionOptions):
     document.removeEventListener("pointermove", onMove, true);
     document.removeEventListener("pointerup", finish, true);
     document.removeEventListener("pointercancel", finish, true);
-    try { element.releasePointerCapture(event.pointerId); } catch {}
+    try { element.releasePointerCapture(event.pointerId); } catch {
+      // Losing capture is harmless because document listeners own cleanup.
+    }
     if (options.resizing) element.removeClass("is-resizing");
     options.onEnd(moved);
   };

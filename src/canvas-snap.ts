@@ -323,9 +323,7 @@ export function createCanvasSnapGuideLayer(container: HTMLElement): CanvasSnapGu
 }
 
 function createGuideElement(container: HTMLElement, direction: "vertical" | "horizontal"): HTMLElement {
-  const element = container.ownerDocument.createElement("div");
-  element.className = `web-desk-snap-guide is-${direction}`;
+  const element = container.createDiv({ cls: `web-desk-snap-guide is-${direction}` });
   element.setAttribute("aria-hidden", "true");
-  container.appendChild(element);
   return element;
 }

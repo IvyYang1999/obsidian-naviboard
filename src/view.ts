@@ -28,7 +28,7 @@ import { CanvasFileSuggestModal, CardPropertiesModal, ConfirmModal, PreviewFileS
 import { normalizeRatingValue, RATING_HEIGHT, RATING_WIDTH, ratingLinkState } from "./rating-state";
 import { applyCardPropertiesToFrontmatter } from "./card-properties-state";
 import { applyCardCaptionToFrontmatter, normalizeCardCaption } from "./card-caption-state";
-import { cardAccessibleLabel, renderCardPropertyIndicators } from "./card-properties-ui";
+import { cardAccessibleLabel } from "./card-properties-ui";
 import { renderWebCardVisual, updateWebCardElementFrame } from "./card-view";
 import {
   cardPlacementFrame,
@@ -82,7 +82,6 @@ import {
   BookmarkCard,
   CardProperties,
   CanvasImage,
-  CANVAS_BOUND,
   CanvasTransform,
   Arrow,
   ArrowEndpoint,
@@ -309,7 +308,7 @@ export class WebDeskView extends ItemView {
     toolbar.setAttribute("aria-label", "画布缩放");
     const zoomOut = toolbar.createEl("button", { cls: "web-desk-tool-btn", attr: { type: "button", "aria-label": "缩小", title: "缩小" } });
     setIcon(zoomOut, "minus");
-    this.zoomLabelEl = toolbar.createEl("span", { cls: "web-desk-zoom-label", text: "100%" });
+    this.zoomLabelEl = toolbar.createSpan({ cls: "web-desk-zoom-label", text: "100%" });
     const zoomIn = toolbar.createEl("button", { cls: "web-desk-tool-btn", attr: { type: "button", "aria-label": "放大", title: "放大" } });
     setIcon(zoomIn, "plus");
     const fit = toolbar.createEl("button", { cls: "web-desk-tool-btn", attr: { type: "button", "aria-label": "适应内容", title: "适应内容" } });
@@ -342,7 +341,7 @@ export class WebDeskView extends ItemView {
       void this.onDrop(event);
     });
     this.registerDomEvent(this.rootEl.ownerDocument, "paste", (event) => {
-      if (this.app.workspace.activeLeaf?.view !== this) return;
+      if (this.app.workspace.getActiveViewOfType(WebDeskView) !== this) return;
       void this.onPaste(event);
     });
 
@@ -896,7 +895,9 @@ export class WebDeskView extends ItemView {
     const baseSelection = event.shiftKey ? new Set(this.selected) : new Set<string>();
     let moved = false;
 
-    try { this.rootEl.setPointerCapture(event.pointerId); } catch {}
+    try { this.rootEl.setPointerCapture(event.pointerId); } catch {
+      // Document-level handlers still complete the marquee without capture.
+    }
 
     const onMove = (moveEvent: PointerEvent): void => {
       const current = this.clientToCanvas(moveEvent.clientX, moveEvent.clientY);
@@ -3019,7 +3020,6 @@ export class WebDeskView extends ItemView {
       el.style.left = `${rating.x}px`;
       el.style.top = `${rating.y}px`;
       el.style.transform = `scale(${rating.scale ?? 1})`;
-      el.style.transformOrigin = "top left";
       el.setAttribute("data-rating-id", rating.id);
       el.setAttribute("role", "group");
       el.setAttribute("aria-label", `${rating.link?.title ?? "独立评分"}：${rating.value || "未评分"}`);
@@ -3410,20 +3410,20 @@ export class WebDeskView extends ItemView {
   private beginArrowDraft(from: ArrowEndpoint): void {
     this.arrowDraft = from;
     this.pendingArrowStart = false;
-    this.rootEl.style.cursor = "crosshair";
+    this.rootEl.addClass("is-drawing-arrow");
     new Notice("点击箭头终点（Esc 取消）", 2500);
   }
 
   private beginArrowFromScratch(): void {
     this.pendingArrowStart = true;
-    this.rootEl.style.cursor = "crosshair";
+    this.rootEl.addClass("is-drawing-arrow");
     new Notice("点击箭头起点", 2500);
   }
 
   private cancelArrowDraft(): void {
     this.arrowDraft = null;
     this.pendingArrowStart = false;
-    this.rootEl.style.cursor = "";
+    this.rootEl.removeClass("is-drawing-arrow");
   }
 
   private clearArrowSelection(): void {

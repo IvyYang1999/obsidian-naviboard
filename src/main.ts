@@ -169,16 +169,20 @@ export default class WebDeskPlugin extends Plugin {
   }
 
   private async loadDataInto(): Promise<void> {
-    const data = (await this.loadData()) as WebDeskPluginData | null;
-    this.settings = { ...DEFAULT_SETTINGS, ...(data?.settings ?? {}) };
-    this.settings.blockedEmbedHosts = Array.isArray(data?.settings?.blockedEmbedHosts)
-      ? data!.settings!.blockedEmbedHosts!.filter((entry): entry is string => typeof entry === "string")
+    const loaded: unknown = await this.loadData();
+    const data = loaded !== null && typeof loaded === "object"
+      ? loaded as WebDeskPluginData
+      : null;
+    const storedSettings = data?.settings;
+    this.settings = { ...DEFAULT_SETTINGS, ...(storedSettings ?? {}) };
+    this.settings.blockedEmbedHosts = Array.isArray(storedSettings?.blockedEmbedHosts)
+      ? storedSettings.blockedEmbedHosts.filter((entry): entry is string => typeof entry === "string")
       : [];
-    this.groups = Array.isArray(data?.groups) ? data!.groups! : [];
-    this.textBoxes = Array.isArray(data?.textboxes) ? data!.textboxes! : [];
-    this.arrows = Array.isArray(data?.arrows) ? data!.arrows! : [];
-    this.images = Array.isArray(data?.images) ? data!.images! : [];
-    this.ratings = Array.isArray(data?.ratings) ? data!.ratings! : [];
+    this.groups = Array.isArray(data?.groups) ? data.groups : [];
+    this.textBoxes = Array.isArray(data?.textboxes) ? data.textboxes : [];
+    this.arrows = Array.isArray(data?.arrows) ? data.arrows : [];
+    this.images = Array.isArray(data?.images) ? data.images : [];
+    this.ratings = Array.isArray(data?.ratings) ? data.ratings : [];
     this.viewTransform = data?.view ?? { panX: 0, panY: 0, zoom: 1 };
   }
 

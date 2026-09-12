@@ -308,7 +308,7 @@ export class DeskEmbed extends MarkdownRenderChild {
     toolbar.setAttribute("aria-label", "画布缩放");
     const zoomOut = toolbar.createEl("button", { cls: "web-desk-tool-btn", attr: { type: "button", "aria-label": "缩小", title: "缩小" } });
     setIcon(zoomOut, "minus");
-    this.zoomEl = toolbar.createEl("span", { cls: "web-desk-zoom-label", text: "100%" });
+    this.zoomEl = toolbar.createSpan({ cls: "web-desk-zoom-label", text: "100%" });
     const zoomIn = toolbar.createEl("button", { cls: "web-desk-tool-btn", attr: { type: "button", "aria-label": "放大", title: "放大" } });
     setIcon(zoomIn, "plus");
     const fit = toolbar.createEl("button", { cls: "web-desk-tool-btn", attr: { type: "button", "aria-label": "适应内容", title: "适应内容" } });
@@ -610,11 +610,11 @@ export class DeskEmbed extends MarkdownRenderChild {
     el.addEventListener("keydown", (event) => {
       if (event.key !== "Enter") return;
       event.preventDefault();
-      this.activateItem(item);
+      void this.activateItem(item);
     });
     el.addEventListener("dblclick", (event) => {
       event.stopPropagation();
-      this.activateItem(item);
+      void this.activateItem(item);
     });
     el.addEventListener("contextmenu", (event) => this.onItemContextMenu(event, item));
     if (item.path) {
@@ -1337,7 +1337,6 @@ export class DeskEmbed extends MarkdownRenderChild {
       el.style.left = `${rating.x}px`;
       el.style.top = `${rating.y}px`;
       el.style.transform = `scale(${rating.scale ?? 1})`;
-      el.style.transformOrigin = "top left";
       el.setAttribute("data-rating-id", rating.id);
       el.setAttribute("role", "group");
       el.setAttribute("aria-label", `${rating.link?.title ?? "独立评分"}：${rating.value || "未评分"}`);
@@ -2134,7 +2133,9 @@ export class DeskEmbed extends MarkdownRenderChild {
     const start = this.clientToCanvas(event.clientX, event.clientY);
     const base = additive ? new Set(this.selectedObjects) : new Set<string>();
     let moved = false;
-    try { this.rootEl.setPointerCapture(event.pointerId); } catch {}
+    try { this.rootEl.setPointerCapture(event.pointerId); } catch {
+      // Document-level handlers still complete the marquee without capture.
+    }
     const onMove = (moveEvent: PointerEvent): void => {
       const current = this.clientToCanvas(moveEvent.clientX, moveEvent.clientY);
       const x = Math.min(start.x, current.x);
@@ -2925,20 +2926,20 @@ export class DeskEmbed extends MarkdownRenderChild {
   private beginArrowDraft(from: ArrowEndpoint): void {
     this.arrowDraft = from;
     this.pendingArrowStart = false;
-    this.rootEl.style.cursor = "crosshair";
+    this.rootEl.addClass("is-drawing-arrow");
     new Notice("点击箭头终点（Esc 取消）", 2500);
   }
 
   private beginArrowFromScratch(): void {
     this.pendingArrowStart = true;
-    this.rootEl.style.cursor = "crosshair";
+    this.rootEl.addClass("is-drawing-arrow");
     new Notice("点击箭头起点", 2500);
   }
 
   private cancelArrowDraft(): void {
     this.arrowDraft = null;
     this.pendingArrowStart = false;
-    this.rootEl.style.cursor = "";
+    this.rootEl.removeClass("is-drawing-arrow");
   }
 
   private addArrow(from: ArrowEndpoint, to: ArrowEndpoint): void {
@@ -3420,7 +3421,7 @@ export class DeskEmbed extends MarkdownRenderChild {
     const info = this.ctx.getSectionInfo(this.el);
     if (info) {
       // 主路径：编辑器精确替换块行
-      const leafEl = this.el.closest(".workspace-leaf") as (HTMLElement & { view?: { editor?: { replaceRange: (t: string, from: { line: number; ch: number }, to: { line: number; ch: number }) => void; getLine: (l: number) => string } } }) | null;
+      const leafEl = this.el.closest<HTMLElement & { view?: { editor?: { replaceRange: (t: string, from: { line: number; ch: number }, to: { line: number; ch: number }) => void; getLine: (l: number) => string } } }>(".workspace-leaf");
       const editor = leafEl?.view?.editor;
       if (editor) {
         const to = { line: info.lineEnd, ch: editor.getLine(info.lineEnd).length };

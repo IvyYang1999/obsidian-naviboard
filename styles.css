@@ -61,6 +61,11 @@
   transform-origin: 0 0;
 }
 
+.web-desk-root.is-drawing-arrow,
+.web-desk-embed.is-drawing-arrow {
+  cursor: crosshair;
+}
+
 
 /* 对齐参考线属于手势反馈：即时出现、即时消失，不用 transition 追赶指针。 */
 .web-desk-snap-guide {
@@ -1943,6 +1948,7 @@ body:has(.web-desk-drilldown) > .modal-container {
 /* 评分是一行星星，不是表单：160×56 的透明底板，绑定时星星上方一行目标名。 */
 .web-desk-rating {
   position: absolute;
+  transform-origin: top left;
   width: 160px;
   height: 56px;
   box-sizing: border-box;

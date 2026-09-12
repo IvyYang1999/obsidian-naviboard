@@ -37,11 +37,11 @@ export function extractMarkdownLinkCandidates(payload: MarkdownDropText): string
   for (const line of combined.split(/\r?\n/)) {
     const raw = line.trim();
     if (/^file:\/\//i.test(raw)) {
-      if (/\.(?:md|pdf)(?:[?#].*)?$/i.test(raw) && !/[<>\[\]()]/.test(raw)) push(raw);
+      if (/\.(?:md|pdf)(?:[?#].*)?$/i.test(raw) && !/[<>[\]()]/.test(raw)) push(raw);
       continue;
     }
     if (/^[a-z][a-z\d+.-]*:\/\//i.test(raw)) continue;
-    if (/\.(?:md|pdf)$/i.test(raw) && !/[<>\[\]()]/.test(raw)) push(raw);
+    if (/\.(?:md|pdf)$/i.test(raw) && !/[<>[\]()]/.test(raw)) push(raw);
   }
   for (const filePath of payload.filePaths ?? []) push(filePath);
   return candidates;

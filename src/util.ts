@@ -84,24 +84,33 @@ export function formatLocalDate(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-export function readJsonResponse(response: { json?: unknown; text: string }): any {
-  if (response.json && typeof response.json === "object") {
-    return response.json;
-  }
-  return JSON.parse(response.text);
+export function asRecord(value: unknown): Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : {};
 }
 
-export function collectTweetPhotoUrls(media: any): string[] {
-  const urls = new Set<string>();
+export function readJsonResponse(response: { json?: unknown; text: string }): Record<string, unknown> {
+  const parsed: unknown = response.json ?? JSON.parse(response.text);
+  return asRecord(parsed);
+}
 
-  for (const photo of media?.photos ?? []) {
-    if (typeof photo?.url === "string" && photo.url) {
+export function collectTweetPhotoUrls(media: unknown): string[] {
+  const urls = new Set<string>();
+  const source = asRecord(media);
+  const photos = Array.isArray(source.photos) ? source.photos : [];
+  const items = Array.isArray(source.all) ? source.all : [];
+
+  for (const value of photos) {
+    const photo = asRecord(value);
+    if (typeof photo.url === "string" && photo.url) {
       urls.add(photo.url);
     }
   }
 
-  for (const item of media?.all ?? []) {
-    if (item?.type === "photo" && typeof item.url === "string" && item.url) {
+  for (const value of items) {
+    const item = asRecord(value);
+    if (item.type === "photo" && typeof item.url === "string" && item.url) {
       urls.add(item.url);
     }
   }
@@ -134,7 +143,7 @@ export function absolutizeUrls(root: HTMLElement, baseUrl: string): void {
 }
 
 export function getDesktopNodeApis(): DesktopNodeApis | null {
-  const windowWithRequire = window as Window & { require?: NodeRequire };
+  const windowWithRequire = window as Window & { require?: NodeJS.Require };
   const nodeRequire =
     typeof windowWithRequire.require === "function"
       ? windowWithRequire.require
@@ -147,10 +156,10 @@ export function getDesktopNodeApis(): DesktopNodeApis | null {
   }
 
   return {
-    childProcess: nodeRequire("child_process"),
-    fs: nodeRequire("fs"),
-    os: nodeRequire("os"),
-    path: nodeRequire("path"),
+    childProcess: nodeRequire("child_process") as unknown as typeof import("child_process"),
+    fs: nodeRequire("fs") as unknown as typeof import("fs"),
+    os: nodeRequire("os") as unknown as typeof import("os"),
+    path: nodeRequire("path") as unknown as typeof import("path"),
   };
 }
 

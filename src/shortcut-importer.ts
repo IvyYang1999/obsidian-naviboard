@@ -1,5 +1,5 @@
 import { App, normalizePath, TFile } from "obsidian";
-import { getDesktopNodeApis, quoteYaml, safeName } from "./util";
+import { asRecord, getDesktopNodeApis, quoteYaml, safeName } from "./util";
 import type { WebDeskSettings } from "./types";
 import {
   classifyLocalPath,
@@ -41,7 +41,7 @@ export async function createLocalShortcutNote(
   await ensureFolder(app, folder);
   const existing = app.vault.getMarkdownFiles().find((file) => {
     if (!file.path.startsWith(`${folder}/`)) return false;
-    const fm = app.metadataCache.getFileCache(file)?.frontmatter as Record<string, unknown> | undefined;
+    const fm = asRecord(app.metadataCache.getFileCache(file)?.frontmatter);
     return fm?.app_path === shortcut.path;
   });
   if (existing) return { file: existing, shortcut, created: false };

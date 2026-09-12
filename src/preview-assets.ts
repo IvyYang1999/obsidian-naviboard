@@ -144,10 +144,10 @@ type HiddenBrowserWindow = {
 type HiddenBrowserWindowConstructor = new (options: Record<string, unknown>) => HiddenBrowserWindow;
 
 function electronBrowserWindow(): HiddenBrowserWindowConstructor | null {
-  const nodeRequire = (window as Window & { require?: NodeRequire }).require;
+  const nodeRequire = (window as Window & { require?: NodeJS.Require }).require;
   if (typeof nodeRequire !== "function") return null;
   try {
-    const electron = nodeRequire("electron") as { remote?: { BrowserWindow?: HiddenBrowserWindowConstructor } };
+    const electron = nodeRequire("electron") as unknown as { remote?: { BrowserWindow?: HiddenBrowserWindowConstructor } };
     if (electron.remote?.BrowserWindow) return electron.remote.BrowserWindow;
   } catch {
     // Newer Electron builds may expose @electron/remote separately.

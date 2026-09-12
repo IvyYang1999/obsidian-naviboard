@@ -97,7 +97,7 @@ export class CanvasFocusBoundary {
       const parent = branch.parentElement;
       if (!parent) break;
       for (const sibling of Array.from(parent.children)) {
-        if (!(sibling instanceof HTMLElement) || sibling === branch) continue;
+        if (!sibling.instanceOf(HTMLElement) || sibling === branch) continue;
         this.snapshots.push({ element: sibling, inert: sibling.inert });
         sibling.inert = true;
       }
@@ -146,11 +146,14 @@ export class CanvasFocusBoundary {
     const target = this.initialFocus?.isConnected
       ? this.initialFocus
       : this.focusableElements()[0] ?? this.overlay;
-    const requestFrame = this.document.defaultView?.requestAnimationFrame.bind(this.document.defaultView)
-      ?? ((callback: FrameRequestCallback) => globalThis.setTimeout(callback, 0));
-    requestFrame(() => {
+    const restoreFocus = (): void => {
       if (this.active && target.isConnected) target.focus({ preventScroll: true });
-    });
+    };
+    if (this.document.defaultView) {
+      this.document.defaultView.requestAnimationFrame(restoreFocus);
+    } else {
+      window.requestAnimationFrame(restoreFocus);
+    }
   }
 
   private focusableElements(scope: HTMLElement = this.overlay): HTMLElement[] {
@@ -179,12 +182,15 @@ export class CanvasFocusBoundary {
     this.activePortal = null;
     if (!hadPortal) return;
     const target = this.lastFocusInside?.isConnected ? this.lastFocusInside : null;
-    const requestFrame = this.document.defaultView?.requestAnimationFrame.bind(this.document.defaultView)
-      ?? ((callback: FrameRequestCallback) => globalThis.setTimeout(callback, 0));
-    requestFrame(() => {
+    const restoreFocus = (): void => {
       if (!this.isTopBoundary()) return;
       (target ?? this.initialFocus ?? this.overlay).focus({ preventScroll: true });
-    });
+    };
+    if (this.document.defaultView) {
+      this.document.defaultView.requestAnimationFrame(restoreFocus);
+    } else {
+      window.requestAnimationFrame(restoreFocus);
+    }
   }
 
   private allowPortal(portal: HTMLElement): void {

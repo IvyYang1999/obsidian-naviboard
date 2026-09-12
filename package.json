@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node esbuild.config.mjs",
     "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "lint:obsidian": "eslint src types package.json",
     "test:unit": "node --test scratch/*.test.cjs"
   },
   "keywords": [
@@ -20,10 +21,15 @@
     "turndown-plugin-gfm": "^1.0.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@eslint/json": "^0.14.0",
     "@types/node": "^20.19.17",
     "@types/turndown": "^5.0.5",
     "esbuild": "^0.25.11",
+    "eslint": "^9.39.5",
+    "eslint-plugin-obsidianmd": "^0.4.2",
     "obsidian": "latest",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.70.0"
   }
 }

@@ -8,10 +8,10 @@ interface ElectronShell {
 }
 
 function electronShell(): ElectronShell | null {
-  const nodeRequire = (window as Window & { require?: NodeRequire }).require;
+  const nodeRequire = (window as Window & { require?: NodeJS.Require }).require;
   if (typeof nodeRequire !== "function") return null;
   try {
-    return (nodeRequire("electron") as { shell?: ElectronShell }).shell ?? null;
+    return (nodeRequire("electron") as unknown as { shell?: ElectronShell }).shell ?? null;
   } catch {
     return null;
   }

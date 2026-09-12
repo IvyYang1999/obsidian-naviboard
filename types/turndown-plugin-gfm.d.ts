@@ -1,4 +1,6 @@
 declare module "turndown-plugin-gfm" {
-  const gfm: any;
+  import TurndownService from "turndown";
+
+  const gfm: TurndownService.Plugin;
   export { gfm };
 }

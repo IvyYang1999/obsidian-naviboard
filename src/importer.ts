@@ -4,6 +4,7 @@ import { WebDeskSettings } from "./types";
 import { localizeWebsitePreview } from "./preview-assets";
 import {
   REQUEST_HEADERS,
+  asRecord,
   absolutizeUrls,
   cleanInlineText,
   collectTweetPhotoUrls,
@@ -153,7 +154,7 @@ function findBookmarkFileByUrl(app: App, settings: WebDeskSettings, url: string)
   const key = normalizedUrlKey(url);
   for (const file of app.vault.getMarkdownFiles()) {
     if (!file.path.startsWith(prefix)) continue;
-    const cached = app.metadataCache.getFileCache(file)?.frontmatter?.url;
+    const cached = asRecord(app.metadataCache.getFileCache(file)?.frontmatter).url;
     if (typeof cached === "string" && normalizedUrlKey(cached) === key) return file;
   }
   return null;
@@ -248,9 +249,10 @@ async function extractTweet(url: string): Promise<ExtractedContent> {
   }
 
   const data = readJsonResponse(response);
-  const tweet = data.tweet ?? {};
-  const text = String(tweet.text ?? "").trim();
-  const author = String(tweet.author?.name ?? user).trim();
+  const tweet = asRecord(data.tweet);
+  const tweetAuthor = asRecord(tweet.author);
+  const text = typeof tweet.text === "string" ? tweet.text.trim() : "";
+  const author = typeof tweetAuthor.name === "string" ? tweetAuthor.name.trim() : user;
   const photoUrls = collectTweetPhotoUrls(tweet.media);
   const bodyParts: string[] = [];
 
@@ -297,14 +299,18 @@ async function extractViaClipiiOrCard(url: string, route: Route): Promise<Extrac
       ["item", "create", "--url", url, "--library", tmpDir],
       CLIPII_TIMEOUT_MS,
     );
-    const data = JSON.parse(result.stdout || "{}");
-    if (!data.ok) {
-      const message = data.error?.message || "clipii 转换失败";
+    const parsed: unknown = JSON.parse(result.stdout || "{}");
+    const data = asRecord(parsed);
+    if (data.ok !== true) {
+      const error = asRecord(data.error);
+      const message = typeof error.message === "string" ? error.message : "clipii 转换失败";
       throw new Error(message);
     }
 
-    const entity = data.data?.result?.entity ?? {};
-    const title = String(entity.title ?? "").trim() || "无标题";
+    const entity = asRecord(asRecord(asRecord(data.data).result).entity);
+    const title = typeof entity.title === "string" && entity.title.trim()
+      ? entity.title.trim()
+      : "无标题";
     const absolutePath = typeof entity.absolutePath === "string" ? entity.absolutePath : "";
     let body = "";
 
@@ -312,7 +318,7 @@ async function extractViaClipiiOrCard(url: string, route: Route): Promise<Extrac
       body = stripFrontmatter(node.fs.readFileSync(absolutePath, "utf8"));
     }
     if (!body.trim()) {
-      body = String(entity.content ?? "");
+      body = typeof entity.content === "string" ? entity.content : "";
     }
     if (!body.trim()) {
       throw new Error("clipii 未返回正文");

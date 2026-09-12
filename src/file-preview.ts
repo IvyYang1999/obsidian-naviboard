@@ -303,7 +303,7 @@ async function renderNativePdf(
     await embed.loadFile?.();
     container.addClass("is-native");
     return true;
-  } catch (error) {
+  } catch {
     container.empty();
     return false;
   }
