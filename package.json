@@ -1,6 +1,6 @@
 {
   "name": "obsidian-naviboard",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "NaviBoard for Obsidian: gather webpages, files, apps, and notes on a free canvas.",
   "main": "main.js",
   "scripts": {

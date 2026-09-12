@@ -1,7 +1,7 @@
 {
   "id": "naviboard",
   "name": "NaviBoard",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "minAppVersion": "1.13.7",
   "description": "Gather webpages, files, apps, and notes on a free canvas. Arrange, connect, preview, and revisit everything in one visual navigation board.",
   "author": "yyt",
